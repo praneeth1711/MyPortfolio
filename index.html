@@ -1,413 +1,178 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Minimal Blog Layout</title>
-<style>
-  :root{
-    --bg:#0f1724;
-    --card:#0b1220;
-    --muted:#94a3b8;
-    --accent:#7c3aed;
-    --glass: rgba(255,255,255,0.04);
-    --radius:14px;
-    --max-width:1200px;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  }
-
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    background: linear-gradient(180deg,#071022 0%, #07162a 100%);
-    color: #e6eef8;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    padding:32px;
-    display:flex;
-    justify-content:center;
-  }
-
-  .wrap{
-    width:100%;
-    max-width:var(--max-width);
-  }
-
-  /* Header */
-  header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    margin-bottom:28px;
-  }
-  .brand{
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
-  .logo{
-    width:48px;height:48px;border-radius:12px;
-    background:linear-gradient(135deg,var(--accent),#4f46e5);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:700;color:white;font-size:18px;box-shadow:0 6px 18px rgba(124,58,237,0.18);
-  }
-  nav.desktop{
-    display:flex;
-    gap:18px;
-    align-items:center;
-  }
-  nav.desktop a{
-    color:var(--muted);
-    text-decoration:none;
-    font-weight:600;
-    font-size:14px;
-  }
-  .cta{
-    background:var(--accent);
-    color:white;
-    border-radius:10px;
-    padding:8px 14px;
-    font-weight:700;
-    text-decoration:none;
-    box-shadow:0 8px 24px rgba(124,58,237,0.18);
-  }
-
-  /* Mobile */
-  .mobile-toggle{
-    display:none;
-    background:transparent;border:1px solid rgba(255,255,255,0.06);
-    padding:8px;border-radius:10px;
-  }
-
-  /* Hero */
-  .hero{
-    background: linear-gradient(90deg, rgba(124,58,237,0.12), rgba(79,70,229,0.06));
-    padding:28px;
-    border-radius:var(--radius);
-    display:flex;
-    gap:20px;
-    align-items:center;
-    margin-bottom:26px;
-    box-shadow: 0 6px 30px rgba(2,6,23,0.6);
-  }
-  .hero .left{
-    flex:1;
-  }
-  .hero h1{
-    margin:0 0 8px 0;
-    font-size:28px;
-    line-height:1.05;
-  }
-  .hero p{margin:0;color:var(--muted)}
-
-  /* Layout grid */
-  .main{
-    display:grid;
-    grid-template-columns: 1fr 320px;
-    gap:22px;
-  }
-
-  /* Posts */
-  .posts{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:18px;
-  }
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-    border:1px solid rgba(255,255,255,0.04);
-    padding:14px;
-    border-radius:12px;
-    display:flex;
-    gap:12px;
-    align-items:flex-start;
-  }
-  .thumb{
-    min-width:130px;height:92px;border-radius:10px;overflow:hidden;
-    flex:0 0 130px;background:#081428;
-    display:flex;align-items:center;justify-content:center;color:var(--muted);
-  }
-  .card .meta{
-    flex:1;
-  }
-  .post-title{
-    margin:0;font-size:16px;color:#e6eef8;
-    margin-bottom:6px;
-  }
-  .post-excerpt{
-    margin:0;color:var(--muted);font-size:13px;
-  }
-  .post-foot{
-    display:flex;gap:10px;align-items:center;margin-top:10px;
-    color:var(--muted);font-size:13px;
-  }
-  .pill{
-    background:var(--glass);padding:6px 8px;border-radius:999px;font-size:12px;color:var(--muted);
-    display:inline-flex;align-items:center;gap:8px;
-  }
-
-  /* Sidebar */
-  aside{
-    position:sticky;top:32px;
-    align-self:start;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-    border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.04);
-  }
-  .search{
-    display:flex;gap:8px;margin-bottom:14px;
-  }
-  .search input{
-    flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
-    background:transparent;color:inherit;
-  }
-  .tags{display:flex;flex-wrap:wrap;gap:8px}
-  .tag{padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);font-size:13px;color:var(--muted);cursor:pointer}
-
-  /* Footer */
-  footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}
-
-  /* Responsive */
-  @media (max-width:900px){
-    .posts{grid-template-columns:1fr}
-    .main{grid-template-columns:1fr}
-    nav.desktop{display:none}
-    .mobile-toggle{display:inline-flex}
-    .hero{flex-direction:column;align-items:flex-start}
-  }
-
-  /* micro interactions */
-  button.icon{
-    background:transparent;border:1px solid rgba(255,255,255,0.04);padding:6px;border-radius:8px;color:var(--muted);cursor:pointer;
-  }
-  .like-btn{display:inline-flex;gap:8px;align-items:center}
-  .small{
-    font-size:13px;color:var(--muted)
-  }
-
-  /* subtle focus */
-  a, button, input {outline-color: rgba(124,58,237,0.26)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Website</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0; padding: 0;
+      background: linear-gradient(120deg, #d4fc79, #96e6a1);
+    }
+    header {
+      background: #00695c;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    h3 { margin: 10px 0 5px; color: #333; }
+    .price {
+      color: #00695c;
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .cart-btn { background: #00796b; }
+    .cart-btn:hover { background: #004d40; }
+    .buy-btn { background: #1976d2; }
+    .buy-btn:hover { background: #0d47a1; }
+    /* Cart Section at bottom */
+    #cart {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 600px;
+      margin: 30px auto;
+    }
+    #cart h4 {
+      margin: 0 0 10px;
+      color: #1976d2;
+      text-align: center;
+    }
+    #cart-items { font-size: 14px; color: #333; }
+    #cart-items p { margin: 5px 0; }
+    #total {
+      font-weight: bold;
+      color: #00796b;
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo">B</div>
-        <div>
-          <div style="font-weight:800">Bluebird Blog</div>
-          <div style="font-size:13px;color:var(--muted)">Thoughts on design & code</div>
-        </div>
-      </div>
 
-      <nav class="desktop" aria-label="Main navigation">
-        <a href="#">Home</a>
-        <a href="#">Series</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-        <a class="cta" href="#">Subscribe</a>
-      </nav>
+  <header>
+    🌟 E-Commerce Website 🌟
+  </header>
 
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">☰</button>
-    </header>
+  <!-- Products -->
+  <div class="container">
+    <div class="card" style="border-top: 5px solid #1976d2;">
+      <img src="https://via.placeholder.com/250/1976d2/fff?text=Chair" alt="Chair">
+      <h3>Stylish Chair</h3>
+      <p class="price">$149.99</p>
+      <button class="cart-btn" onclick="addToCart('Stylish Chair', 149.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Stylish Chair')">Buy Now</button>
+    </div>
 
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="left">
-        <h1 id="hero-title">Design, Code & Everything In Between</h1>
-        <p>Weekly deep dives, tutorials, and short essays about modern frontend design and small-scale systems.</p>
-        <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
-          <a class="pill" href="#latest">Latest</a>
-          <a class="pill" href="#popular">Popular</a>
-        </div>
-      </div>
-      <div class="right" style="min-width:210px;text-align:right">
-        <div class="small">Subscribe for new posts</div>
-        <div style="margin-top:8px">
-          <input id="subEmail" type="email" placeholder="you@domain.com" style="padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;width:100%" />
-        </div>
-      </div>
-    </section>
+    <div class="card" style="border-top: 5px solid #43a047;">
+      <img src="https://via.placeholder.com/250/43a047/fff?text=Table" alt="Table">
+      <h3>Modern Table</h3>
+      <p class="price">$249.99</p>
+      <button class="cart-btn" onclick="addToCart('Modern Table', 249.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Modern Table')">Buy Now</button>
+    </div>
 
-    <div class="main">
-      <main>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <h2 id="latest" style="margin:0">Latest posts</h2>
-          <div class="small" id="resultsCount">Showing 8 posts</div>
-        </div>
+    <div class="card" style="border-top: 5px solid #f9a825;">
+      <img src="https://via.placeholder.com/250/f9a825/fff?text=Sofa" alt="Sofa">
+      <h3>Comfort Sofa</h3>
+      <p class="price">$499.99</p>
+      <button class="cart-btn" onclick="addToCart('Comfort Sofa', 499.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Comfort Sofa')">Buy Now</button>
+    </div>
 
-        <section class="posts" id="postsGrid">
-          <!-- Cards will be injected by JS for demo -->
-        </section>
+    <div class="card" style="border-top: 5px solid #8e24aa;">
+      <img src="https://via.placeholder.com/250/8e24aa/fff?text=Lamp" alt="Lamp">
+      <h3>Smart Lamp</h3>
+      <p class="price">$89.99</p>
+      <button class="cart-btn" onclick="addToCart('Smart Lamp', 89.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Smart Lamp')">Buy Now</button>
+    </div>
 
-        <footer>© <span id="year"></span> Bluebird Blog — Built with care</footer>
-      </main>
+    <div class="card" style="border-top: 5px solid #e53935;">
+      <img src="https://via.placeholder.com/250/e53935/fff?text=Headphones" alt="Headphones">
+      <h3>Wireless Headphones</h3>
+      <p class="price">$199.99</p>
+      <button class="cart-btn" onclick="addToCart('Wireless Headphones', 199.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Wireless Headphones')">Buy Now</button>
+    </div>
 
-      <aside>
-        <div class="search">
-          <input id="searchInput" placeholder="Search posts, tags, authors..." aria-label="Search posts" />
-          <button class="icon" id="clearSearch" title="Clear search">✕</button>
-        </div>
-
-        <div style="margin-bottom:12px">
-          <div style="font-weight:700;margin-bottom:8px">About</div>
-          <div class="small">I'm Spandana — a frontend tinkerer sharing experiments, notes, and how-tos.</div>
-        </div>
-
-        <div style="margin-bottom:12px">
-          <div style="font-weight:700;margin-bottom:8px">Tags</div>
-          <div class="tags" id="tagList">
-            <!-- tag buttons -->
-          </div>
-        </div>
-
-        <div style="margin-bottom:6px;font-weight:700">Newsletter</div>
-        <div class="small" style="margin-bottom:8px">Get short email updates when new posts publish.</div>
-        <button class="cta" style="width:100%">Subscribe</button>
-      </aside>
+    <div class="card" style="border-top: 5px solid #5d4037;">
+      <img src="https://via.placeholder.com/250/5d4037/fff?text=Watch" alt="Watch">
+      <h3>Smart Watch</h3>
+      <p class="price">$129.99</p>
+      <button class="cart-btn" onclick="addToCart('Smart Watch', 129.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Smart Watch')">Buy Now</button>
     </div>
   </div>
 
-<script>
-  // Demo data (replace with your data source)
-  const posts = [
-    {id:1,title:"Building Accessible Components",excerpt:"Accessibility isn't optional. A practical guide to accessible UI components and patterns.",date:"2025-06-12",tags:["design","accessibility"],imgText:"A11y",likes:12},
-    {id:2,title:"Small State Machines in JS",excerpt:"Manage UI complexity with tiny state machines instead of ad-hoc flags.",date:"2025-06-02",tags:["javascript","architecture"],imgText:"FSM",likes:8},
-    {id:3,title:"CSS Grid for Layouts",excerpt:"Grid is powerful — examples to level up your page layouts without heavy frameworks.",date:"2025-05-28",tags:["css","layout"],imgText:"Grid",likes:21},
-    {id:4,title:"Design Tokens: The Source of Truth",excerpt:"How to structure tokens for scale and theming across platforms.",date:"2025-05-10",tags:["design","tokens"],imgText:"T",likes:6},
-    {id:5,title:"Optimizing Fonts for Performance",excerpt:"Fonts matter. Tips to reduce layout shift and load time.",date:"2025-04-24",tags:["performance","fonts"],imgText:"F",likes:4},
-    {id:6,title:"Progressive Enhancement in 2025",excerpt:"A refresher: build resilient experiences that work for everyone.",date:"2025-04-15",tags:["principles","progressive enhancement"],imgText:"PE",likes:14},
-    {id:7,title:"Animating With the Web Animations API",excerpt:"When to use WAAPI, examples, and how to keep animations performant.",date:"2025-03-30",tags:["animation","javascript"],imgText:"WAAPI",likes:9},
-    {id:8,title:"Design Critique Checklist",excerpt:"A short checklist to make critiques actionable and kind.",date:"2025-03-10",tags:["design","team"],imgText:"Crit",likes:3}
-  ];
+  <!-- Cart Section (Bottom) -->
+  <div id="cart">
+    <h4>🛒 Shopping Cart</h4>
+    <div id="cart-items"></div>
+    <p style="text-align:center;"><b>Total:</b> $<span id="total">0.00</span></p>
+  </div>
 
-  // Derived tag list
-  const tags = Array.from(new Set(posts.flatMap(p => p.tags))).sort();
+  <script>
+    let cart = [];
+    let total = 0;
 
-  // Render tags
-  const tagListEl = document.getElementById('tagList');
-  tags.forEach(t=>{
-    const b = document.createElement('button');
-    b.className='tag';
-    b.textContent = t;
-    b.addEventListener('click',()=> {
-      document.getElementById('searchInput').value = t;
-      applyFilter();
-    });
-    tagListEl.appendChild(b);
-  });
-
-  // Render posts
-  const postsGrid = document.getElementById('postsGrid');
-  function renderPosts(list){
-    postsGrid.innerHTML = '';
-    list.forEach(p=>{
-      const card = document.createElement('article');
-      card.className='card';
-      card.innerHTML = `
-        <div class="thumb" aria-hidden="true">${p.imgText}</div>
-        <div class="meta">
-          <h3 class="post-title">${escapeHtml(p.title)}</h3>
-          <p class="post-excerpt" id="excerpt-${p.id}">${escapeHtml(p.excerpt.slice(0,120))}${p.excerpt.length>120? '...':''}</p>
-          <div class="post-foot">
-            <div class="small">${p.date}</div>
-            <div style="flex:1"></div>
-            <div class="like-btn">
-              <button class="icon" data-id="${p.id}" aria-label="like">♥</button>
-              <div class="small" id="likes-${p.id}">${p.likes}</div>
-            </div>
-            <button class="icon" data-toggle="${p.id}" style="margin-left:6px" aria-label="read more">…</button>
-          </div>
-        </div>
-      `;
-      postsGrid.appendChild(card);
-    });
-    document.getElementById('resultsCount').textContent = Showing ${list.length} post${list.length!==1?'s':''};
-  }
-
-  // safe escape for simple strings
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-
-  renderPosts(posts);
-
-  // Filter/search
-  const searchInput = document.getElementById('searchInput');
-  searchInput.addEventListener('input', applyFilter);
-  document.getElementById('clearSearch').addEventListener('click', ()=>{searchInput.value=''; applyFilter();});
-
-  function applyFilter(){
-    const q = searchInput.value.trim().toLowerCase();
-    if(!q){ renderPosts(posts); return; }
-    const filtered = posts.filter(p=>{
-      return p.title.toLowerCase().includes(q) ||
-             p.excerpt.toLowerCase().includes(q) ||
-             p.tags.join(' ').toLowerCase().includes(q) ||
-             p.date.toLowerCase().includes(q);
-    });
-    renderPosts(filtered);
-  }
-
-  // Delegated click handling for like and read-more toggle
-  document.addEventListener('click', (e)=>{
-    const likeBtn = e.target.closest('button[data-id]');
-    if(likeBtn){
-      const id = +likeBtn.getAttribute('data-id');
-      const p = posts.find(x=>x.id===id);
-      p.likes++;
-      document.getElementById(likes-${id}).textContent = p.likes;
-      likeBtn.animate([{ transform: 'scale(1)'},{ transform:'scale(1.25)'},{ transform:'scale(1)'}],{duration:200});
-      return;
+    function addToCart(product, price) {
+      cart.push({product, price});
+      total += price;
+      displayCart();
+      alert(product + " added to cart!");
     }
 
-    const toggle = e.target.closest('button[data-toggle]');
-    if(toggle){
-      const id = +toggle.getAttribute('data-toggle');
-      const ex = document.getElementById(excerpt-${id});
-      const post = posts.find(x=>x.id===id);
-      if(!ex) return;
-      if(ex.textContent.length > 200){
-        // already expanded -> collapse
-        ex.textContent = post.excerpt.slice(0,120) + (post.excerpt.length>120?'...':'');
-      } else {
-        ex.textContent = post.excerpt;
-      }
-      return;
+    function displayCart() {
+      let cartItems = document.getElementById("cart-items");
+      cartItems.innerHTML = "";
+      cart.forEach(item => {
+        cartItems.innerHTML += <p>${item.product} - $${item.price.toFixed(2)}</p>;
+      });
+      document.getElementById("total").textContent = total.toFixed(2);
     }
-  });
 
-  // Mobile menu (very small)
-  const mobileToggle = document.getElementById('mobileToggle');
-  mobileToggle.addEventListener('click', ()=>{
-    const nav = document.querySelector('nav.desktop');
-    if(nav.style.display === 'flex' || nav.style.display === ''){
-      nav.style.display = 'none';
-    } else {
-      nav.style.display = 'flex';
-      nav.style.flexDirection = 'column';
-      nav.style.position = 'absolute';
-      nav.style.right = '32px';
-      nav.style.top = '72px';
-      nav.style.background = 'rgba(8,12,20,0.7)';
-      nav.style.padding = '12px';
-      nav.style.borderRadius = '12px';
-      nav.style.backdropFilter = 'blur(6px)';
+    function buyNow(product) {
+      alert("Proceeding to checkout for: " + product);
     }
-  });
+  </script>
 
-  // small helper
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  // Accessibility: allow search with Enter to focus results (demo)
-  searchInput.addEventListener('keydown', (ev)=>{
-    if(ev.key === 'Enter') {
-      ev.preventDefault();
-      // Focus first post title if exists
-      const firstTitle = document.querySelector('.post-title');
-      if(firstTitle) firstTitle.scrollIntoView({behavior:'smooth', block:'center'});
-    }
-  });
-
-</script>
 </body>
 </html>
