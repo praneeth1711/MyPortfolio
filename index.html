@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Website</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0; padding: 0;
+      background: linear-gradient(120deg, #d4fc79, #96e6a1);
+    }
+    header {
+      background: #00695c;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    h3 { margin: 10px 0 5px; color: #333; }
+    .price {
+      color: #00695c;
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .cart-btn { background: #00796b; }
+    .cart-btn:hover { background: #004d40; }
+    .buy-btn { background: #1976d2; }
+    .buy-btn:hover { background: #0d47a1; }
+    /* Cart Section at bottom */
+    #cart {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 600px;
+      margin: 30px auto;
+    }
+    #cart h4 {
+      margin: 0 0 10px;
+      color: #1976d2;
+      text-align: center;
+    }
+    #cart-items { font-size: 14px; color: #333; }
+    #cart-items p { margin: 5px 0; }
+    #total {
+      font-weight: bold;
+      color: #00796b;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    🌟 E-Commerce Website 🌟
+  </header>
+
+  <!-- Products -->
+  <div class="container">
+    <div class="card" style="border-top: 5px solid #1976d2;">
+      <img src="https://via.placeholder.com/250/1976d2/fff?text=Chair" alt="Chair">
+      <h3>Stylish Chair</h3>
+      <p class="price">$149.99</p>
+      <button class="cart-btn" onclick="addToCart('Stylish Chair', 149.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Stylish Chair')">Buy Now</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid #43a047;">
+      <img src="https://via.placeholder.com/250/43a047/fff?text=Table" alt="Table">
+      <h3>Modern Table</h3>
+      <p class="price">$249.99</p>
+      <button class="cart-btn" onclick="addToCart('Modern Table', 249.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Modern Table')">Buy Now</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid #f9a825;">
+      <img src="https://via.placeholder.com/250/f9a825/fff?text=Sofa" alt="Sofa">
+      <h3>Comfort Sofa</h3>
+      <p class="price">$499.99</p>
+      <button class="cart-btn" onclick="addToCart('Comfort Sofa', 499.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Comfort Sofa')">Buy Now</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid #8e24aa;">
+      <img src="https://via.placeholder.com/250/8e24aa/fff?text=Lamp" alt="Lamp">
+      <h3>Smart Lamp</h3>
+      <p class="price">$89.99</p>
+      <button class="cart-btn" onclick="addToCart('Smart Lamp', 89.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Smart Lamp')">Buy Now</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid #e53935;">
+      <img src="https://via.placeholder.com/250/e53935/fff?text=Headphones" alt="Headphones">
+      <h3>Wireless Headphones</h3>
+      <p class="price">$199.99</p>
+      <button class="cart-btn" onclick="addToCart('Wireless Headphones', 199.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Wireless Headphones')">Buy Now</button>
+    </div>
+
+    <div class="card" style="border-top: 5px solid #5d4037;">
+      <img src="https://via.placeholder.com/250/5d4037/fff?text=Watch" alt="Watch">
+      <h3>Smart Watch</h3>
+      <p class="price">$129.99</p>
+      <button class="cart-btn" onclick="addToCart('Smart Watch', 129.99)">Add to Cart</button>
+      <button class="buy-btn" onclick="buyNow('Smart Watch')">Buy Now</button>
+    </div>
+  </div>
+
+  <!-- Cart Section (Bottom) -->
+  <div id="cart">
+    <h4>🛒 Shopping Cart</h4>
+    <div id="cart-items"></div>
+    <p style="text-align:center;"><b>Total:</b> $<span id="total">0.00</span></p>
+  </div>
+
+  <script>
+    let cart = [];
+    let total = 0;
+
+    function addToCart(product, price) {
+      cart.push({product, price});
+      total += price;
+      displayCart();
+      alert(product + " added to cart!");
+    }
+
+    function displayCart() {
+      let cartItems = document.getElementById("cart-items");
+      cartItems.innerHTML = "";
+      cart.forEach(item => {
+        cartItems.innerHTML += `<p>${item.product} - $${item.price.toFixed(2)}</p>`;
+      });
+      document.getElementById("total").textContent = total.toFixed(2);
+    }
+
+    function buyNow(product) {
+      alert("Proceeding to checkout for: " + product);
+    }
+  </script>
+
+</body>
+</html>
